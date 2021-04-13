@@ -7,8 +7,13 @@ class ModelTests(TestCase):
 
     def test_ingredient_str(self):
         """Test the ingredient string representation"""
+        recipe = models.Recipe.objects.create(
+            name="Pizza",
+            description="Cheesy Goodness",
+        )
         ingredient = models.Ingredient.objects.create(
-            name="Cucumber"
+            name="Cucumber",
+            recipe=recipe
         )
 
         self.assertEqual(str(ingredient), ingredient.name)
