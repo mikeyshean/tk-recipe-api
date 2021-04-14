@@ -10,8 +10,24 @@ class IngredientViewSet(viewsets.GenericViewSet, mixins.ListModelMixin):
     serializer_class = serializers.IngredientSerializer
     queryset = Ingredient.objects.all()
 
+    def get_serializer_class(self):
+        """Return serializer class"""
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Create new ingredient"""
+        serializer.save()
+
 
 class RecipeViewSet(viewsets.ModelViewSet):
     """Manage recipes in the database"""
     queryset = Recipe.objects.all()
     serializer_class = serializers.RecipeSerializer
+
+    def get_serializer_class(self):
+        """Return serializer class"""
+        return self.serializer_class
+
+    def perform_create(self, serializer):
+        """Create new recipe"""
+        serializer.save()
