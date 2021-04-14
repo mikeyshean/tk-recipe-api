@@ -21,8 +21,18 @@ class RecipeSerializer(serializers.ModelSerializer):
         read_only_fields = ('id',)
 
     def create(self, validated_data):
-        ingredients = validated_data.pop('ingredients')
+        ingredients = validated_data.pop('ingredients', [])
         recipe = Recipe.objects.create(**validated_data)
-        for ingredient in ingredients:
-            Ingredient.objects.create(recipe=recipe, **ingredient)
+        for ingredient_data in ingredients:
+            Ingredient.objects.create(recipe=recipe, **ingredient_data)
+        return recipe
+
+    def update(self, instance, validated_data):
+        ingredients = validated_data.pop('ingredients', [])
+        recipe = super().update(instance, validated_data)
+
+        """Delete existings ingredients and replace with new ones"""
+        Ingredient.objects.filter(recipe=recipe).delete()
+        for ingredient_data in ingredients:
+            Ingredient.objects.create(recipe=recipe, **ingredient_data)
         return recipe

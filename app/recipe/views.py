@@ -31,3 +31,11 @@ class RecipeViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         """Create new recipe"""
         serializer.save()
+
+    def get_queryset(self):
+        """Return objects with optional filter for substring"""
+        queryset = Recipe.objects.all()
+        name = self.request.query_params.get('name')
+        if name is not None:
+            queryset = queryset.filter(name__icontains=name)
+        return queryset
